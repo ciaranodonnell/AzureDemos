@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AzureDemos.QStorage.HowOld\AzureDemos.QStorage.WritingRecognizer.csproj" />
+    <ProjectReference Include="..\AzureDemos.QStorage.WritingRecognizer\AzureDemos.QStorage.WritingRecognizer.csproj" />
   </ItemGroup>
 
 </Project>

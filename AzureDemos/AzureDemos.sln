@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QueueStorage", "QueueStorage", "{6E231EC7-CD8A-41EB-B22E-79E56F518A05}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizerServer", "AzureDemos.QStorage.HoldOldServer\AzureDemos.QStorage.WritingRecognizerServer.csproj", "{71E217BC-7C73-4604-A71E-E59321BD6426}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizer.Server", "QueueStorage\AzureDemos.QStorage.WritingRecognizer.Server\AzureDemos.QStorage.WritingRecognizer.Server.csproj", "{71E217BC-7C73-4604-A71E-E59321BD6426}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizer", "AzureDemos.QStorage.HowOld\AzureDemos.QStorage.WritingRecognizer.csproj", "{55874CCC-16CD-480A-846F-3E405F003796}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizer", "QueueStorage\AzureDemos.QStorage.WritingRecognizer\AzureDemos.QStorage.WritingRecognizer.csproj", "{55874CCC-16CD-480A-846F-3E405F003796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.QStorage.WritingRecognizer.Web", "AzureDemos.QStorage.WritingRecognizer.Web\AzureDemos.QStorage.WritingRecognizer.Web.csproj", "{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.QStorage.WritingRecognizer.Web", "QueueStorage\AzureDemos.QStorage.WritingRecognizer.Web\AzureDemos.QStorage.WritingRecognizer.Web.csproj", "{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
