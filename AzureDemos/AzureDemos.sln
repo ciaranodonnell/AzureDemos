@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QueueStorage", "QueueStorage", "{6E231EC7-CD8A-41EB-B22E-79E56F518A05}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizerServer", "AzureDemos.QStorage.HoldOldServer\AzureDemos.QStorage.WritingRecognizerServer.csproj", "{71E217BC-7C73-4604-A71E-E59321BD6426}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizer", "AzureDemos.QStorage.HowOld\AzureDemos.QStorage.WritingRecognizer.csproj", "{55874CCC-16CD-480A-846F-3E405F003796}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.QStorage.WritingRecognizer.Web", "AzureDemos.QStorage.WritingRecognizer.Web\AzureDemos.QStorage.WritingRecognizer.Web.csproj", "{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71E217BC-7C73-4604-A71E-E59321BD6426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71E217BC-7C73-4604-A71E-E59321BD6426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71E217BC-7C73-4604-A71E-E59321BD6426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71E217BC-7C73-4604-A71E-E59321BD6426}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55874CCC-16CD-480A-846F-3E405F003796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55874CCC-16CD-480A-846F-3E405F003796}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55874CCC-16CD-480A-846F-3E405F003796}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55874CCC-16CD-480A-846F-3E405F003796}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{71E217BC-7C73-4604-A71E-E59321BD6426} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
+		{55874CCC-16CD-480A-846F-3E405F003796} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
+		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A5DCC8B-803E-4E24-B05A-16668598016F}
+	EndGlobalSection
+EndGlobal
