@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.438
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28711.60
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QueueStorage", "QueueStorage", "{6E231EC7-CD8A-41EB-B22E-79E56F518A05}"
 EndProject
@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.Writing
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizer", "QueueStorage\AzureDemos.QStorage.WritingRecognizer\AzureDemos.QStorage.WritingRecognizer.csproj", "{55874CCC-16CD-480A-846F-3E405F003796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.QStorage.WritingRecognizer.Web", "QueueStorage\AzureDemos.QStorage.WritingRecognizer.Web\AzureDemos.QStorage.WritingRecognizer.Web.csproj", "{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.WritingRecognizer.Web", "QueueStorage\AzureDemos.QStorage.WritingRecognizer.Web\AzureDemos.QStorage.WritingRecognizer.Web.csproj", "{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceBus", "ServiceBus", "{D88CEF40-917B-49B8-933C-59D760CE3449}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.ServiceBus.DemoApp", "ServiceBus\DemoApp\AzureDemos.ServiceBus.DemoApp.csproj", "{CCD3005A-BF28-453F-960D-9D14447CBDC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,10 @@ Global
 		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +45,7 @@ Global
 		{71E217BC-7C73-4604-A71E-E59321BD6426} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
 		{55874CCC-16CD-480A-846F-3E405F003796} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
 		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
+		{CCD3005A-BF28-453F-960D-9D14447CBDC1} = {D88CEF40-917B-49B8-933C-59D760CE3449}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A5DCC8B-803E-4E24-B05A-16668598016F}
