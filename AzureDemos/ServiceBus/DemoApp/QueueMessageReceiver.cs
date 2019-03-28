@@ -8,7 +8,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Azure.ServiceBus.Management;
 
-namespace AzureDemos.ServiceBus.DemoApp
+namespace AzureDemos.ServiceBus.DemoApp.BusTools
 {
 	class QueueMessageReceiver
 	{
