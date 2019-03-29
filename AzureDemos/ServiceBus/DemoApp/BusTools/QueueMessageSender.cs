@@ -9,35 +9,22 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
 {
     class QueueMessageSender
     {
-        private string connectionString;
+        private readonly string connectionString;
         private QueueClient client;
-        private ServiceBusManager mgt;
-        private string queueName;
+        private readonly string queueName;
 
         public QueueMessageSender(string serviceBusConnectionString, string queueName)
         {
             this.connectionString = serviceBusConnectionString;
 
-            this.client = new Microsoft.Azure.ServiceBus.QueueClient(serviceBusConnectionString, queueName);
-
-            mgt = new ServiceBusManager(serviceBusConnectionString);
-
+            this.client = new QueueClient(serviceBusConnectionString, queueName);
+                        
             this.queueName = queueName;
         }
 
         public async Task SendMessage(string messageContents)
         {
-            var desiredQueueState = new QueueDescription(queueName)
-            {
-                DefaultMessageTimeToLive = TimeSpan.FromSeconds(5),
-                MaxDeliveryCount = 1,
-                EnableDeadLetteringOnMessageExpiration = true
-            };
-
-
-            await mgt.CreateQueue(desiredQueueState, true);
-
-			await client.SendAsync(new Message { Body = UTF8Encoding.UTF8.GetBytes(messageContents), TimeToLive = TimeSpan.FromSeconds(10) });
+            await client.SendAsync(new Message { Body = UTF8Encoding.UTF8.GetBytes(messageContents), TimeToLive = TimeSpan.FromSeconds(10) });
         }
 
 

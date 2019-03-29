@@ -49,7 +49,17 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
 
 		}
 
-		internal async Task<string> GetDeadLetterMessage()
+        internal async Task<string> GetSingleMessage()
+        {
+
+            var message = await(new MessageReceiver(connectionString, queuePath, 
+                receiveMode: ReceiveMode.ReceiveAndDelete).ReceiveAsync(1, TimeSpan.FromSeconds(1)));
+            var msg = message?.FirstOrDefault();
+
+            return msg == null ? null : UTF8Encoding.UTF8.GetString(msg.Body);
+        }
+
+        internal async Task<string> GetDeadLetterMessage()
 		{
 			var dlqName = EntityNameHelper.FormatDeadLetterPath(queuePath);
 			var message = await (new MessageReceiver(connectionString, dlqName, receiveMode: ReceiveMode.ReceiveAndDelete).ReceiveAsync(1, TimeSpan.FromSeconds(1)));

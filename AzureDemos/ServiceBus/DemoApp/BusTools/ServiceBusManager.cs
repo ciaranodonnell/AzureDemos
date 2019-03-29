@@ -19,20 +19,20 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
 
         #region Queue Management
 
-        public async Task CreateQueue(string queuePath)
+        public async Task CreateQueueAsync(string queuePath)
         {
-            await CreateQueue(new QueueDescription(queuePath), false);
+            await CreateQueueAsync(new QueueDescription(queuePath), false);
         }
-        public async Task CreateQueue(string queuePath, TimeSpan messageTTL, bool enableDeadLetteringOnMessageExpiration, bool deleteAndRemakeIfExists)
+        public async Task CreateQueueAsync(string queuePath, TimeSpan messageTTL, bool enableDeadLetteringOnMessageExpiration, bool deleteAndRemakeIfExists)
         {
-            await CreateQueue(new QueueDescription(queuePath)
+            await CreateQueueAsync(new QueueDescription(queuePath)
             {
                 DefaultMessageTimeToLive = messageTTL,
                 EnableDeadLetteringOnMessageExpiration = enableDeadLetteringOnMessageExpiration
             }, deleteAndRemakeIfExists);
         }
 
-        public async Task CreateQueue(QueueDescription description, bool deleteAndRemakeIfExists)
+        public async Task CreateQueueAsync(QueueDescription description, bool deleteAndRemakeIfExists)
         {
             var exists = await mgtClient.QueueExistsAsync(description.Path);
 

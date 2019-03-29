@@ -9,31 +9,56 @@ namespace AzureDemos.ServiceBus.DemoApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static string connectionString = null;
+
+
+        static async Task Main(string[] args)
         {
 
-            Parser.Default.ParseArguments<ExpiredMessagesTest, BasicSendReceiveTestVerb>(args)
+            
+            try
+            {
+                connectionString = System.Configuration.ConfigurationManager.AppSettings["asbcs"];
+            }
+            catch { }
+
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached && args.Length == 0)
+            {
+                args = $"{ExpiredMessagesTestVerb.Verb} -c {connectionString}".SplitCommandLineStyle();
+            }
+
+#endif
+
+
+
+
+            Parser.Default.ParseArguments<ExpiredMessagesTestVerb, BasicSendReceiveTestVerb>(args)
                 .MapResult(
-                  (BasicSendReceiveTestVerb opts) => DoBasicTest(opts),
-                  (ExpiredMessagesTest opts) => DoExpiredMessagesTest(opts),
-                  errs => 1);
+                 (BasicSendReceiveTestVerb opts) => DoBasicTest(opts).Result,
+                 (ExpiredMessagesTestVerb opts) => DoExpiredMessagesTest(opts).Result,
+                  errs =>
+                  {
+                      Console.WriteLine("Error Mapping command lines");
+                      Console.WriteLine(string.Join(' ', args));
+                      return 1;
+                  });
 
             Console.WriteLine("Done");
             Console.ReadLine();
         }
 
-        private static int DoExpiredMessagesTest(ExpiredMessagesTest opts)
+        private static async Task<int> DoExpiredMessagesTest(ExpiredMessagesTestVerb opts)
         {
-
+            ReceivingExpiredMessages tester = new ReceivingExpiredMessages(opts);
+            await tester.RunTest();
             return 0;
         }
 
-        static int DoBasicTest(BasicSendReceiveTestVerb opts)
+        static async Task<int> DoBasicTest(BasicSendReceiveTestVerb opts)
         {
-            string connectionString = System.Configuration.ConfigurationManager.AppSettings["asbcs"];
-            string queueName = System.Configuration.ConfigurationManager.AppSettings["demoqueue"];
-
-            DoSendAndReceive(connectionString, queueName).GetAwaiter().GetResult();
+         
+            await DoSendAndReceive(opts.ConnectionString, opts.QueuePath);
 
             return 0;
         }
