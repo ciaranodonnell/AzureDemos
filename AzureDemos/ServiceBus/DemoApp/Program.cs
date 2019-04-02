@@ -4,6 +4,7 @@ using CommandLine;
 using Microsoft.Azure.ServiceBus;
 using System;
 using System.Threading.Tasks;
+using AzureDemos.Common;
 
 namespace AzureDemos.ServiceBus.DemoApp
 {
@@ -21,9 +22,9 @@ namespace AzureDemos.ServiceBus.DemoApp
                 connectionString = System.Configuration.ConfigurationManager.AppSettings["asbcs"];
             }
             catch { }
-
+			
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached && args.Length == 0)
+			if (System.Diagnostics.Debugger.IsAttached && args.Length == 0)
             {
                 args = $"{ExpiredMessagesTestVerb.Verb} -c {connectionString}".SplitCommandLineStyle();
             }

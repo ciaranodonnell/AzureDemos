@@ -13,7 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.QStorage.Writing
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceBus", "ServiceBus", "{D88CEF40-917B-49B8-933C-59D760CE3449}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.ServiceBus.DemoApp", "ServiceBus\DemoApp\AzureDemos.ServiceBus.DemoApp.csproj", "{CCD3005A-BF28-453F-960D-9D14447CBDC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDemos.ServiceBus.DemoApp", "ServiceBus\DemoApp\AzureDemos.ServiceBus.DemoApp.csproj", "{CCD3005A-BF28-453F-960D-9D14447CBDC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Event Hub", "Event Hub", "{9870A7BB-8CB4-4FA9-BBBB-25E849216D70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.EventHub.EHSender", "EventHub\EHSender\AzureDemos.EventHub.EHSender.csproj", "{25BCB198-442A-410D-A94A-C60C1490A143}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.EventHub.EventProcessor", "EventHub\EventProcessor\AzureDemos.EventHub.EventProcessor.csproj", "{25D62CFA-1024-415B-BEAF-D5D8E50E7E29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.Common", "AzureDemos.Common\AzureDemos.Common.csproj", "{864E13C0-9772-46F9-81C5-8FE5181AB067}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +45,18 @@ Global
 		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCD3005A-BF28-453F-960D-9D14447CBDC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25BCB198-442A-410D-A94A-C60C1490A143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25BCB198-442A-410D-A94A-C60C1490A143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25BCB198-442A-410D-A94A-C60C1490A143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25BCB198-442A-410D-A94A-C60C1490A143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25D62CFA-1024-415B-BEAF-D5D8E50E7E29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25D62CFA-1024-415B-BEAF-D5D8E50E7E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25D62CFA-1024-415B-BEAF-D5D8E50E7E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25D62CFA-1024-415B-BEAF-D5D8E50E7E29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{864E13C0-9772-46F9-81C5-8FE5181AB067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{864E13C0-9772-46F9-81C5-8FE5181AB067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{864E13C0-9772-46F9-81C5-8FE5181AB067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{864E13C0-9772-46F9-81C5-8FE5181AB067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +66,8 @@ Global
 		{55874CCC-16CD-480A-846F-3E405F003796} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
 		{9F2808E2-3DED-4033-BD11-8EC19F7BF6AA} = {6E231EC7-CD8A-41EB-B22E-79E56F518A05}
 		{CCD3005A-BF28-453F-960D-9D14447CBDC1} = {D88CEF40-917B-49B8-933C-59D760CE3449}
+		{25BCB198-442A-410D-A94A-C60C1490A143} = {9870A7BB-8CB4-4FA9-BBBB-25E849216D70}
+		{25D62CFA-1024-415B-BEAF-D5D8E50E7E29} = {9870A7BB-8CB4-4FA9-BBBB-25E849216D70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A5DCC8B-803E-4E24-B05A-16668598016F}
