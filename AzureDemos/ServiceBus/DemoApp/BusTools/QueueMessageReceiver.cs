@@ -8,7 +8,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Azure.ServiceBus.Management;
 
-namespace AzureDemos.ServiceBus.DemoApp
+namespace AzureDemos.ServiceBus.DemoApp.BusTools
 {
 	class QueueMessageReceiver
 	{
@@ -49,7 +49,17 @@ namespace AzureDemos.ServiceBus.DemoApp
 
 		}
 
-		internal async Task<string> GetDeadLetterMessage()
+        internal async Task<string> GetSingleMessage()
+        {
+
+            var message = await(new MessageReceiver(connectionString, queuePath, 
+                receiveMode: ReceiveMode.ReceiveAndDelete).ReceiveAsync(1, TimeSpan.FromSeconds(1)));
+            var msg = message?.FirstOrDefault();
+
+            return msg == null ? null : UTF8Encoding.UTF8.GetString(msg.Body);
+        }
+
+        internal async Task<string> GetDeadLetterMessage()
 		{
 			var dlqName = EntityNameHelper.FormatDeadLetterPath(queuePath);
 			var message = await (new MessageReceiver(connectionString, dlqName, receiveMode: ReceiveMode.ReceiveAndDelete).ReceiveAsync(maxMessageCount: 1, operationTimeout: TimeSpan.FromSeconds(1)));
