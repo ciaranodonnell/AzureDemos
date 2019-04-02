@@ -53,7 +53,7 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
         {
 
             var message = await(new MessageReceiver(connectionString, queuePath, 
-                receiveMode: ReceiveMode.ReceiveAndDelete).ReceiveAsync(1, TimeSpan.FromSeconds(1)));
+                receiveMode: ReceiveMode.ReceiveAndDelete).ReceiveAsync( maxMessageCount: 1, operationTimeout: TimeSpan.FromSeconds(1)));
             var msg = message?.FirstOrDefault();
 
             return msg == null ? null : UTF8Encoding.UTF8.GetString(msg.Body);
