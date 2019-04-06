@@ -49,6 +49,15 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
 
         }
 
+        internal async Task DeleteQueueAsync(string queuePath)
+        {
+            var exists = await mgtClient.QueueExistsAsync(queuePath);
+            if (exists)
+                await mgtClient.DeleteQueueAsync(queuePath);
+
+        }
+
+
         #endregion
 
     }

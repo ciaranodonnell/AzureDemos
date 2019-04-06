@@ -38,7 +38,7 @@ namespace AzureDemos.ServiceBus.DemoApp
             Console.WriteLine("Message Sent, Going to receive it now");
             string message = await receiver.GetSingleMessage();
 
-            Console.WriteLine("Message Received: " + message ?? "<NULL>");
+            Console.WriteLine("Message Received: " +( message ?? "<NULL>"));
 
 
             Console.WriteLine("Sending second message");
@@ -51,7 +51,13 @@ namespace AzureDemos.ServiceBus.DemoApp
              message = await receiver.GetSingleMessage();
 
 
-            Console.WriteLine("Message Received: " + message ?? "<NULL>");
+            Console.WriteLine("Message Received: " + (message ?? "<NULL>"));
+
+            Console.WriteLine("Hit Enter to Continue and Delete Queue");
+            Console.ReadLine();
+
+            await mgt.DeleteQueueAsync(config.QueuePath);
+
 
         }
     }
