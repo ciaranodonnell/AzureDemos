@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace AzureDemos.ServiceBus.DemoApp
+namespace AzureDemos.Common
 {
 
     public static class CommandLineSplitter
