@@ -13,7 +13,7 @@ namespace AzureDemos.ServiceBus.DemoApp
         static string connectionString = null;
 
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
 
             

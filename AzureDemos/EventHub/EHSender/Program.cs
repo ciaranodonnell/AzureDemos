@@ -1,4 +1,6 @@
 ﻿using AzureDemos.Common;
+using AzureDemos.EventHub.EventProcessor.CommandLine;
+using CommandLine;
 using System;
 
 namespace AzureDemos.EventHub.EHSender
@@ -27,6 +29,16 @@ namespace AzureDemos.EventHub.EHSender
 #endif
 
 
-		}
+
+            //Parser.Default.ParseArguments<SendingOptions>(args).WithParsed((options) =>
+            //{
+
+            //});
+
+
+
+
+
+        }
 	}
 }
