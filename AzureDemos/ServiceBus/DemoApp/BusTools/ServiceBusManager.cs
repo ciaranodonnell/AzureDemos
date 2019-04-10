@@ -23,6 +23,8 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
         {
             await CreateQueueAsync(new QueueDescription(queuePath), false);
         }
+
+        
         public async Task CreateQueueAsync(string queuePath, TimeSpan messageTTL, bool enableDeadLetteringOnMessageExpiration, bool deleteAndRemakeIfExists)
         {
             await CreateQueueAsync(new QueueDescription(queuePath)
@@ -59,6 +61,27 @@ namespace AzureDemos.ServiceBus.DemoApp.BusTools
 
 
         #endregion
+
+
+        internal async Task CreateTopic(string topic)
+        {
+            var exists = await mgtClient.TopicExistsAsync(topic);
+            if (!exists)
+                await mgtClient.CreateTopicAsync(topic);
+
+        }
+
+
+        internal async Task CreateSubscription(string topic, string subscriptionName)
+        {
+            await CreateTopic(topic);
+
+            var exists = await mgtClient.SubscriptionExistsAsync(topic, subscriptionName);
+            if (!exists)
+                await mgtClient.CreateSubscriptionAsync(new SubscriptionDescription(topic, subscriptionName));
+
+        }
+
 
     }
 }

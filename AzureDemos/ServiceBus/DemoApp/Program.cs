@@ -16,17 +16,18 @@ namespace AzureDemos.ServiceBus.DemoApp
         static void Main(string[] args)
         {
 
-            
+
             try
             {
                 connectionString = System.Configuration.ConfigurationManager.AppSettings["asbcs"];
             }
             catch { }
-			
+
 #if DEBUG
-			if (System.Diagnostics.Debugger.IsAttached && args.Length == 0)
+            if (System.Diagnostics.Debugger.IsAttached && args.Length == 0)
             {
-                args = $"{ExpiredMessagesTestVerb.Verb} -c {connectionString}".SplitCommandLineStyle();
+                args = $"{CompetingConsumerTestVerb.Verb} -c {connectionString}".SplitCommandLineStyle();
+                //      args = $"{ExpiredMessagesTestVerb.Verb} -c {connectionString}".SplitCommandLineStyle();
             }
 
 #endif
@@ -34,9 +35,10 @@ namespace AzureDemos.ServiceBus.DemoApp
 
 
 
-            Parser.Default.ParseArguments<ExpiredMessagesTestVerb, BasicSendReceiveTestVerb>(args)
+            Parser.Default.ParseArguments<ExpiredMessagesTestVerb, BasicSendReceiveTestVerb, CompetingConsumerTestVerb>(args)
                 .MapResult(
                  (BasicSendReceiveTestVerb opts) => DoBasicTest(opts).Result,
+                 (CompetingConsumerTestVerb opts) => DoCompetingConsumerTest(opts).Result,
                  (ExpiredMessagesTestVerb opts) => DoExpiredMessagesTest(opts).Result,
                   errs =>
                   {
@@ -58,7 +60,7 @@ namespace AzureDemos.ServiceBus.DemoApp
 
         static async Task<int> DoBasicTest(BasicSendReceiveTestVerb opts)
         {
-         
+
             await DoSendAndReceive(opts.ConnectionString, opts.QueuePath);
 
             return 0;
@@ -67,6 +69,12 @@ namespace AzureDemos.ServiceBus.DemoApp
 
 
 
+        private static async Task<int> DoCompetingConsumerTest(CompetingConsumerTestVerb opts)
+        {
+            CompetingConsumerExample example = new CompetingConsumerExample(opts);
+            await example.RunTest();
+            return 0;
+        }
 
 
         public static async Task DoSendAndReceive(string connectionString, string queueName)
