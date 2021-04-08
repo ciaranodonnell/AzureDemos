@@ -11,10 +11,12 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace AzureDemos.QStorage.WritingRecognizer
 {
-    public class WritingRecognizerService
+    public class WritingRecognizerService : BackgroundService
     {
         private string queueStorageConnectionString;
         private string cognitiveSubscriptionKey;
@@ -22,53 +24,15 @@ namespace AzureDemos.QStorage.WritingRecognizer
         private CloudStorageAccount storageAccount;
         private CloudQueue queue;
 
-        public WritingRecognizerService(string connectionString, string cognitiveSubscriptionKey, string queueName = "WritingRecognizerQueue")
+        public WritingRecognizerService(IOptions<WritingRecognizerConfiguration> config)
         {
-            this.queueStorageConnectionString = connectionString;
-            this.cognitiveSubscriptionKey = cognitiveSubscriptionKey;
-            this.queueName = queueName.ToLowerInvariant();
+            var configValues = config.Value;
+            this.queueStorageConnectionString = configValues.ConnectionString;
+            this.cognitiveSubscriptionKey = configValues.CognitiveSubscriptionKey;
+            this.queueName =configValues.QueueName.ToLowerInvariant();
         }
 
-        public void Run()
-        {
-            this.storageAccount = CloudStorageAccount.Parse(queueStorageConnectionString);
-
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-
-            // Retrieve a reference to a container.
-            this.queue = queueClient.GetQueueReference(queueName);
-
-            // Create the queue if it doesn't already exist
-            queue.CreateIfNotExists();
-
-
-            while (true)
-            {
-                var message = this.queue.GetMessage(TimeSpan.FromSeconds(10));
-                if(message == null)
-                {
-                    Thread.Sleep(1000);
-                    continue;
-                }
-                var msgbytes = message.AsBytes;
-                var request = DeserializeRequest(msgbytes);
-
-                Thread.Sleep(8000);
-
-                //uh ok - we've used almost all our 10 seconds. better ask for more time
-                queue.UpdateMessage(message, TimeSpan.FromSeconds(20), MessageUpdateFields.Visibility);
-
-                //System.IO.File.WriteAllBytes(request.Image)
-                
-                var result = MakeAnalysisRequest(request.Image).GetAwaiter().GetResult();
-
-                Console.WriteLine(result);
-
-                queue.DeleteMessage(message);
-
-            }
-
-        }
+    
 
         private IWritingRecognizerRequest DeserializeRequest(byte[] msgBytes)
         {
@@ -183,5 +147,47 @@ namespace AzureDemos.QStorage.WritingRecognizer
         }
 
 
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            this.storageAccount = CloudStorageAccount.Parse(queueStorageConnectionString);
+
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+
+            // Retrieve a reference to a container.
+            this.queue = queueClient.GetQueueReference(queueName);
+
+            // Create the queue if it doesn't already exist
+            await queue.CreateIfNotExistsAsync(stoppingToken);
+
+
+            while (true)
+            {
+                var message = await this.queue.GetMessageAsync(stoppingToken);
+                if(message == null)
+                {
+                    await Task.Delay(1000);
+                }
+                else
+                {
+
+
+                    var msgbytes = message.AsBytes;
+                    var request = DeserializeRequest(msgbytes);
+
+                    await Task.Delay(8000);
+
+                    //uh ok - we've used almost all our 10 seconds. better ask for more time
+                    queue.UpdateMessage(message, TimeSpan.FromSeconds(20), MessageUpdateFields.Visibility);
+
+                    //System.IO.File.WriteAllBytes(request.Image)
+
+                    var result =await MakeAnalysisRequest(request.Image);
+
+                    Console.WriteLine(result);
+
+                    await queue.DeleteMessageAsync(message, stoppingToken);
+                }
+            }
+        }
     }
 }
