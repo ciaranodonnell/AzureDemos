@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.Kafka.KafkaProdu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.Kafka.KafkaConsumerDemo", "Kafka\KafkaConsumerDemo\AzureDemos.Kafka.KafkaConsumerDemo.csproj", "{CE10251F-AEB0-442F-94CA-E7669A3EBCD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDemos.SimpleServiceBus", "ServiceBus\AzureDemos.SimpleServiceBus\AzureDemos.SimpleServiceBus.csproj", "{CDC12FCD-7081-495C-8E3E-12BF166782F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{CE10251F-AEB0-442F-94CA-E7669A3EBCD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE10251F-AEB0-442F-94CA-E7669A3EBCD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE10251F-AEB0-442F-94CA-E7669A3EBCD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDC12FCD-7081-495C-8E3E-12BF166782F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDC12FCD-7081-495C-8E3E-12BF166782F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDC12FCD-7081-495C-8E3E-12BF166782F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDC12FCD-7081-495C-8E3E-12BF166782F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{25D62CFA-1024-415B-BEAF-D5D8E50E7E29} = {9870A7BB-8CB4-4FA9-BBBB-25E849216D70}
 		{3870A342-E56D-4376-8077-C1996E0A2C56} = {5BE2B51D-0721-42F3-8FD3-6AD4EBF58EC0}
 		{CE10251F-AEB0-442F-94CA-E7669A3EBCD4} = {5BE2B51D-0721-42F3-8FD3-6AD4EBF58EC0}
+		{CDC12FCD-7081-495C-8E3E-12BF166782F6} = {D88CEF40-917B-49B8-933C-59D760CE3449}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A5DCC8B-803E-4E24-B05A-16668598016F}

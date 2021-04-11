@@ -2,13 +2,10 @@
 using Microsoft.Azure.Storage.Queue;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -125,7 +122,7 @@ namespace AzureDemos.QStorage.WritingRecognizer
                 int i = 0;
                 do
                 {
-                    System.Threading.Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     response = await client.GetAsync(operationLocation);
                     contentString = await response.Content.ReadAsStringAsync();
                     ++i;
@@ -165,16 +162,16 @@ namespace AzureDemos.QStorage.WritingRecognizer
                 var message = await this.queue.GetMessageAsync(stoppingToken);
                 if(message == null)
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(1000, stoppingToken);
                 }
                 else
                 {
 
 
-                    var msgbytes = message.AsBytes;
-                    var request = DeserializeRequest(msgbytes);
+                    var msgBytes = message.AsBytes;
+                    var request = DeserializeRequest(msgBytes);
 
-                    await Task.Delay(8000);
+                    await Task.Delay(8000, stoppingToken);
 
                     //uh ok - we've used almost all our 10 seconds. better ask for more time
                     queue.UpdateMessage(message, TimeSpan.FromSeconds(20), MessageUpdateFields.Visibility);
