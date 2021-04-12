@@ -25,7 +25,8 @@ namespace AzureDemos.SimpleServiceBus
 			while (true)
 			{
 				await BasicSendMessage(namespaceConnectionString, queuePath);
-				Console.ReadLine();
+				var entry = Console.ReadLine();
+				if (entry == "quit") break;
 			}
 		}
 
