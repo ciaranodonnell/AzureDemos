@@ -22,8 +22,11 @@ namespace ConsoleApp1
 			var topicName = "demotopic";
 			var subscriptionName = "demosubscription1";
 
+			//I have added the below line to give us a clear subscription each time. Dont worry about how it works for now
 			await ClearSubscription(connectionString, topicName, subscriptionName);
-			
+
+
+
 			var topicClient = new TopicClient(connectionString, topicName);
 
 			for (int x = 1; x <= 10; x++)
@@ -44,39 +47,24 @@ namespace ConsoleApp1
 			MessageHandlerOptions options = new MessageHandlerOptions(ExceptionHandler)
 			{
 				MaxAutoRenewDuration = TimeSpan.Zero,
-				AutoComplete =  false,
+				AutoComplete = false,
 			};
 
 			subscriptionClient.RegisterMessageHandler(MessageHandler, options);
-			
+
 			Console.ReadLine();
 
 		}
 
-		private static readonly HashSet<string> previousMessageIds = new HashSet<string>();
-		private static int receivedMessageNumber = 0;
 		static async Task MessageHandler(Message message, CancellationToken token)
 		{
 			var bodyBytes = message.Body;
 
 			var ourMessage = System.Text.Encoding.UTF8.GetString(bodyBytes);
-			
-			var seenBefore = previousMessageIds.Contains(message.MessageId);
 
-			if (!seenBefore) previousMessageIds.Add(message.MessageId);
+			Console.WriteLine($"Message Received: '{ourMessage}'. Id = {message.MessageId}");
 
-			receivedMessageNumber++;
-			
-			if (receivedMessageNumber  % 2 == 0)
-			{
-				Console.WriteLine($"Message Received: '{ourMessage}'. Number {receivedMessageNumber}. Rejected the message");
-				await subscriptionClient.AbandonAsync(message.SystemProperties.LockToken);
-			}
-			else
-			{
-				Console.WriteLine($"Message Received: '{ourMessage}'. Number {receivedMessageNumber}. Completing the message");
-				await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
-			}
+			await subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken);
 		}
 
 
@@ -97,7 +85,7 @@ namespace ConsoleApp1
 			await mc.DeleteSubscriptionAsync(topic, subscription);
 
 			await mc.CreateSubscriptionAsync(sub);
-			
+
 		}
 	}
 }
