@@ -12,7 +12,8 @@ namespace ConsoleApp1
 	class Program
 	{
 		private static SubscriptionClient subscriptionClient;
-		private static MessageReceiver dlqClient;
+		private static MessageReceiver dlqMessageReceiver;
+
 
 		static async Task Main(string[] args)
 		{
@@ -24,17 +25,14 @@ namespace ConsoleApp1
 			var subscriptionName = "demosubscription1";
 
 			var queueName = "demoqueue";
-			
-			
+
+
 
 			//I have added the below line to give us a clear subscription each time. Dont worry about how it works for now
 			await ClearSubscription(connectionString, topicName, subscriptionName);
 
 
-			var formattedSubscriptionPath= EntityNameHelper.FormatSubscriptionPath(topicName, subscriptionName);
 
-			var subscriptionDLQ =EntityNameHelper.FormatDeadLetterPath(formattedSubscriptionPath);
-			
 
 			var topicClient = new TopicClient(connectionString, topicName);
 
@@ -62,14 +60,20 @@ namespace ConsoleApp1
 			subscriptionClient.RegisterMessageHandler(MessageHandler, options);
 
 
+			var subscriptionPath = EntityNameHelper.FormatSubscriptionPath(topicName, subscriptionName);
 
-			 dlqClient = new MessageReceiver(connectionString, subscriptionDLQ, ReceiveMode.PeekLock,
-				RetryPolicy.Default);
+			var dlqEntityPath = EntityNameHelper.FormatDeadLetterPath(subscriptionPath);
 
-			 MessageHandlerOptions dlqOptions = new(ExceptionHandler) {AutoComplete  =false};
-			dlqClient.RegisterMessageHandler(DLQMessageHandler, dlqOptions);
-				 
-			
+			dlqMessageReceiver = new MessageReceiver(connectionString, dlqEntityPath);
+
+			MessageHandlerOptions dlqOption = new MessageHandlerOptions(ExceptionHandler)
+			{
+				AutoComplete = false
+			};
+
+			dlqMessageReceiver.RegisterMessageHandler(DLQMessageHandler, dlqOption);
+
+
 			Console.ReadLine();
 
 		}
@@ -80,21 +84,29 @@ namespace ConsoleApp1
 
 			var ourMessage = System.Text.Encoding.UTF8.GetString(bodyBytes);
 
-			Console.WriteLine($"DLQ Message Received: '{ourMessage}'. Id = {message.MessageId}");
+			Console.WriteLine($"DLQ Message Received: '{ourMessage}'. Id = {message.MessageId}. Delivery Count = {message.SystemProperties.DeliveryCount}");
 
-			await dlqClient.CompleteAsync(message.SystemProperties.LockToken);
+			await dlqMessageReceiver.CompleteAsync(message.SystemProperties.LockToken);
 		}
-		
-		
+
+
+
 		static async Task MessageHandler(Message message, CancellationToken token)
 		{
 			var bodyBytes = message.Body;
 
 			var ourMessage = System.Text.Encoding.UTF8.GetString(bodyBytes);
 
-			Console.WriteLine($"Message Received: '{ourMessage}'. Id = {message.MessageId}");
+			Console.WriteLine($"Message Received and DeadLettered: '{ourMessage}'. Id = {message.MessageId}");
 
-			await subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken);
+			if (message.SystemProperties.DeliveryCount < 5)
+			{
+				await subscriptionClient.AbandonAsync(message.SystemProperties.LockToken);
+			}
+			else
+			{
+				await subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken);
+			}
 		}
 
 
