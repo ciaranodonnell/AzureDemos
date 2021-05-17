@@ -27,9 +27,9 @@ namespace SyncOverAsyncTest
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddSingleton<ICommunicationService>(sp =>
+			services.AddSingleton((Func<IServiceProvider, ICommunicationService>)(sp =>
 			{
-				return new TcsBasedCommunicationService(new MessagingConfig
+				return new CommunicationService((MessagingConfig)new MessagingConfig
 				{
 					ConnectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=YTx4cOCZrec/H+kalXfwuW6H4jkBpjPMfUAk9LrIC0c=",
 					ReplyTopic = "replyTopic",
@@ -37,7 +37,7 @@ namespace SyncOverAsyncTest
 					RequestTopic = "requestTopic",
 					RequestSubscription = "requestSubscription"
 				});
-			});
+			}));
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{

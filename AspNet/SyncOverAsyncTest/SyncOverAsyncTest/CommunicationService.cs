@@ -29,19 +29,7 @@ namespace SyncOverAsyncTest
 
 		}
 
-		Task HandleMessage(Message message, CancellationToken cancelToken)
-		{
-
-			var response = JsonConvert.DeserializeObject<ResponseMessage>(System.Text.Encoding.UTF8.GetString(message.Body));
-			if (states.TryGetValue(response.Id, out var state))
-			{
-				state.Number = response.Number;
-				state.token.Cancel();
-			}
-			return Task.CompletedTask;
-		}
-
-
+		
 		Task HandleError(ExceptionReceivedEventArgs args)
 		{
 			return Task.CompletedTask;
@@ -50,47 +38,39 @@ namespace SyncOverAsyncTest
 
 		Dictionary<Guid, StateObj> states = new Dictionary<Guid, StateObj>();
 
+		Task HandleMessage(Message message, CancellationToken cancelToken)
+		{
+
+			var response = JsonConvert.DeserializeObject<ResponseMessage>(System.Text.Encoding.UTF8.GetString(message.Body));
+			if (states.TryGetValue(response.Id, out var state))
+			{
+				state.taskSource.SetResult(new GetNumberResult { Id = response.Id, Number = response.Number });
+				states.Remove(response.Id);
+			}
+			return Task.CompletedTask;
+		}
+
 
 		public async Task<GetNumberResult> DoAsyncWork(Guid Id)
 		{
 
-			StateObj state = new StateObj { Id = Id, token = new CancellationTokenSource() };
+			StateObj state = new StateObj { Id = Id, taskSource = new TaskCompletionSource<GetNumberResult>() };
 
 			states.Add(Id, state);
 
 			await topicClient.SendAsync(new Message(System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new RequestMessage { Id = Id }))));
 
-
-			while (state.LoopCount < 10 && !state.IsCompleted)
-			{
-				try
-				{
-					await Task.Delay(1000, state.token.Token);
-				}
-				catch (TaskCanceledException) { state.IsCompleted = true; }
-				state.LoopCount++;
-			}
-
-			states.Remove(Id);
-
-			return new GetNumberResult { Id = Id, Number = state.Number };
-
+			return await state.taskSource.Task;
+			
 		}
-
-
-
-
-
 
 		class StateObj
 		{
 			public Guid Id;
-			public CancellationTokenSource token;
+			public TaskCompletionSource<GetNumberResult> taskSource;
 			public int Number;
 			public int LoopCount;
 			public bool IsCompleted;
 		}
-
-
 	}
 }
