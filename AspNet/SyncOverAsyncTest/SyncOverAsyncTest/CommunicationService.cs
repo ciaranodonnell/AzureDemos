@@ -68,9 +68,6 @@ namespace SyncOverAsyncTest
 		{
 			public Guid Id;
 			public TaskCompletionSource<GetNumberResult> taskSource;
-			public int Number;
-			public int LoopCount;
-			public bool IsCompleted;
 		}
 	}
 }
