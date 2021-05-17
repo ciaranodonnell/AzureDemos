@@ -11,10 +11,10 @@ namespace SyncOverAsyncTest.Controllers
 	[Route("[controller]")]
 	public class NumberController : ControllerBase
 	{
-		private readonly CommunicationService messagingService;
+		private readonly ICommunicationService messagingService;
 		private readonly ILogger<NumberController> _logger;
 
-		public NumberController(ILogger<NumberController> logger, CommunicationService messagingService)
+		public NumberController(ILogger<NumberController> logger,ICommunicationService messagingService)
 		{
 			this.messagingService = messagingService;
 			_logger = logger;
@@ -23,7 +23,7 @@ namespace SyncOverAsyncTest.Controllers
 		[HttpGet]
 		public async Task<int> Get()
 		{
-			var getNumberResult = await messagingService.DoAsyncWork(Guid.NewGuid(), null);
+			var getNumberResult = await messagingService.DoAsyncWork(Guid.NewGuid());
 			return getNumberResult.Number;
 		}
 
