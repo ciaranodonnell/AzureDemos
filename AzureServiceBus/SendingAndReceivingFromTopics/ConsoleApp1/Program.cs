@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.Primitives;
+using Microsoft.Identity.Client;
 
 namespace ConsoleApp1
 {
@@ -10,12 +12,28 @@ namespace ConsoleApp1
 		{
 			Console.WriteLine("Starting Azure Service Bus Demo");
 
+			string endpoint = $"sb://iaransyoutubedemos.servicebus.windows.net/";
+
 			var connectionString =
 				"<connection string>";
 
 			var topicName = "demotopic";
 
-			TopicClient topicClient = new TopicClient(connectionString, topicName, RetryPolicy.Default);
+			var tokenProvider = TokenProvider.CreateAzureActiveDirectoryTokenProvider(async (audience, authority, state) =>
+			{
+				var app = PublicClientApplicationBuilder.Create(ClientId)
+							.WithRedirectUri(ConfigurationManager.AppSettings["redirectURI"])
+							.Build();
+
+				var serviceBusAudience = new Uri("https://servicebus.azure.net");
+
+				var authResult = await app.AcquireTokenInteractive(new string[] { $"{serviceBusAudience}/.default" }).ExecuteAsync();
+
+				return authResult.AccessToken;
+			};
+
+			TopicClient topicClient = new TopicClient(endpoint, topicName, 
+);
 
 			SubscriptionClient subscriptionClient = new SubscriptionClient(connectionString, topicName,
 				"demosubscription1", ReceiveMode.PeekLock, RetryPolicy.Default);

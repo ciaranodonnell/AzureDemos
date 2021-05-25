@@ -18,7 +18,7 @@ namespace ConsoleApp1
 			Console.WriteLine("Starting Azure Service Bus Demo");
 
 			var connectionString =
-				"";
+				"Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=qQpXvuApzeF2n6tN3ZOoK5kIOgbCCn8N+PH2XVZ4Lwc=";
 			var topicName = "demotopic";
 			var subscriptionName = "demosubscription1";
 
