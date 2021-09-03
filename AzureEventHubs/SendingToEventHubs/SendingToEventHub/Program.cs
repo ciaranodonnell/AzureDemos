@@ -6,58 +6,57 @@ using Azure.Messaging.EventHubs.Producer;
 
 namespace SendingToEventHub
 {
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            Console.WriteLine("Starting our Event Hub Producer");
+	class Program
+	{
+		static async Task Main(string[] args)
+		{
+			Console.WriteLine("Starting our Event Hub Producer");
 
-            string namespaceConnectionString = "Endpoint=sb://eventhubyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=sendpolicy;SharedAccessKey=0GeKILsXQNlvXmxA0uZ1j5kkRAdMAsqPEcD6qB0asZ8=";
-            string eventHubName = "demoeventhub";
+			string namespaceConnectionString = "Endpoint=sb://youtubeeventhubdemo.servicebus.windows.net/;SharedAccessKeyName=sendandreceive;SharedAccessKey=Lz65+NZ5N0zwZRkvih+8kXfuD0tYWV7Sk1nNdY+xA+0=;EntityPath=demoeventhub";
+			string eventHubName = "demoeventhub";
 
-            await SendAFewMessages(namespaceConnectionString, eventHubName);
+			await SendanEnumerableOfEvents(namespaceConnectionString, eventHubName);
 
-            await SendAFewMessages(namespaceConnectionString, eventHubName);
-
-
-        }
+			await SendaBatchOfEvents(namespaceConnectionString, eventHubName);
 
 
-        public static async Task SendABatchOfMessages(string namespaceConnectionString, string eventHubName)
-        {
+			Console.WriteLine("Sent the events");
 
-            EventHubProducerClient client = new EventHubProducerClient(namespaceConnectionString, eventHubName);
+			Console.ReadLine();
 
-            var batch = await client.CreateBatchAsync(new CreateBatchOptions { PartitionKey = "world" });
-            
-            for (int x = 0; x < 10; x++)
-            {
-                var msg = new Azure.Messaging.EventHubs.EventData("This is an event message");
-                batch.TryAdd(msg);
-            }
+		}
 
-            await client.SendAsync(batch);
+		private static async Task SendaBatchOfEvents(string namespaceConnectionString, string eventHubName)
+		{
+			EventHubProducerClient producer = new EventHubProducerClient(namespaceConnectionString, eventHubName);
 
-        }
+			var batch = await producer.CreateBatchAsync(new CreateBatchOptions { PartitionKey = "this is another string" });
 
-        public static async Task SendAFewMessages(string namespaceConnectionString, string eventHubName)
-        {
+			for (int i = 0; i < 10; i++)
+			{
+				batch.TryAdd(new EventData($"This is event {i}"));
+			}
 
-            EventHubProducerClient client = new EventHubProducerClient(namespaceConnectionString, eventHubName);
+			await producer.SendAsync(batch);
+		}
 
-            //var batch = await client.CreateBatchAsync(new CreateBatchOptions { PartitionKey = "hello" });
-            List<EventData> events = new();
 
-            for (int x = 0; x < 10; x++)
-            {
-                var msg = new Azure.Messaging.EventHubs.EventData("This is an event message");
-                events.Add(msg);
-            }
 
-            //batch.TryAdd(message);
+		private static async Task SendanEnumerableOfEvents(string namespaceConnectionString, string eventHubName)
+		{
+			EventHubProducerClient producer = new EventHubProducerClient(namespaceConnectionString, eventHubName);
 
-            await client.SendAsync(events, new SendEventOptions { PartitionKey = "hello" });
+			List<EventData> events = new List<EventData>();
 
-        }
-    }
+			for (int i = 0; i < 10; i++)
+			{
+				events.Add(new EventData($"This is event {i}"));
+			}
+
+			await producer.SendAsync(events, new SendEventOptions { PartitionKey = "this is a string" });
+		}
+
+
+	}
+
 }
