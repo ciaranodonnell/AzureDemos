@@ -12,8 +12,6 @@ namespace SendingToEventHub
 {
 	class Program
 	{
-		private static BlobContainerClient blobStorage;
-		private static Azure.Messaging.EventHubs.EventProcessorClient client;
 
 		static async Task Main(string[] args)
 		{
@@ -21,49 +19,45 @@ namespace SendingToEventHub
 
 
 
-			string namespaceConnectionString = "Endpoint=sb://eventhubyoutubedemos2.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=KoaJlFSB5wTdAnwoHKrQA+fl2eoWHpjyBK9vkuo8aFw=";
+			string namespaceConnectionString = "Endpoint=sb://youtubeeventhubdemo.servicebus.windows.net/;SharedAccessKeyName=sendandreceive;SharedAccessKey=Lz65+NZ5N0zwZRkvih+8kXfuD0tYWV7Sk1nNdY+xA+0=;EntityPath=demoeventhub";
 			string eventHubName = "demoeventhub";
 
 
-			string blobConnectionString = "DefaultEndpointsProtocol=https;AccountName=eventhubstorageaccount2;AccountKey=QybIK0ll3m4TGvb5mB7RbP3BfRSDGssvGrJ+hU1vNldSVahJ/ankfp55zGsNkMItu5cjZPpyaVfffrrPJ8p1vQ==;EndpointSuffix=core.windows.net";
+			string blobConnectionString = "DefaultEndpointsProtocol=https;AccountName=eventhubstorageaccount3;AccountKey=ncQZvl23zgA6eS2+KUJ6IERd/emASeUFmBU2kVv/XYbepeA+h3HdyuGJ6g4WtFZ+gGOAfD6uP/tA9acXD29P8g==;EndpointSuffix=core.windows.net";
 			string containerName = "offsetcontainer";
 
 
-			blobStorage = new BlobContainerClient(blobConnectionString, containerName);
+			BlobContainerClient blobContainerClient = new BlobContainerClient(blobConnectionString, containerName);
 
-			client = new EventProcessorClient(blobStorage, "$Default", namespaceConnectionString, eventHubName);
+			EventProcessorClient processor = new EventProcessorClient(blobContainerClient, "$Default", namespaceConnectionString, eventHubName);
 
-			client.ProcessEventAsync += Client_ProcessEventAsync;
-			client.ProcessErrorAsync += Client_ProcessErrorAsync;
-
-			await client.StartProcessingAsync();
-			Console.WriteLine("Processor Started");
+			processor.ProcessEventAsync += Processor_ProcessEventAsync;
+			processor.ProcessErrorAsync += Processor_ProcessErrorAsync;
+			
+			await processor.StartProcessingAsync();
+			Console.WriteLine("Started the processor");
 
 
 			Console.ReadLine();
-			await client.StopProcessingAsync();
-			Console.WriteLine("Processor Stopped");
-		}
+			await processor.StopProcessingAsync();
+			Console.WriteLine("Started the processor");
 
-		static int messagesProcessed = 0;
-		private static async Task Client_ProcessEventAsync(ProcessEventArgs arg)
-		{
-			Console.WriteLine($"Event Received from {arg.Partition.PartitionId}: {arg.Data.EventBody.ToString()}");
 
-			messagesProcessed++;
-			if (messagesProcessed % 10 == 0)
-			{
-				await arg.UpdateCheckpointAsync();
-			}
 
 		}
 
-
-		private static Task Client_ProcessErrorAsync(ProcessErrorEventArgs arg)
+		private static Task Processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
 		{
-			Console.WriteLine("An Error Occurred. " + arg.Exception.ToString());
+			Console.WriteLine("Error Received: " + arg.Exception.ToString());
 			return Task.CompletedTask;
 		}
 
+		private static async Task Processor_ProcessEventAsync(ProcessEventArgs arg)
+		{
+			Console.WriteLine($"Event Received from Partition {arg.Partition.PartitionId}: {arg.Data.EventBody.ToString()}");
+
+			await arg.UpdateCheckpointAsync();
+			
+		}
 	}
 }
