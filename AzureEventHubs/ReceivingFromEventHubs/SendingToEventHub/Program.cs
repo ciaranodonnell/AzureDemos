@@ -14,10 +14,10 @@ namespace SendingToEventHub
         {
             Console.WriteLine("Starting our Event Hub Producer");
 
-            string namespaceConnectionString = "Endpoint=sb://eventhubyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=sendpolicy;SharedAccessKey=0GeKILsXQNlvXmxA0uZ1j5kkRAdMAsqPEcD6qB0asZ8=";
+            string namespaceConnectionString = "Endpoint=sb://eventhubyoutubedemos2.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=KoaJlFSB5wTdAnwoHKrQA+fl2eoWHpjyBK9vkuo8aFw=";
             string eventHubName = "demoeventhub";
 
-            
+
             await SendAFewMessages(namespaceConnectionString, eventHubName);
             Console.WriteLine("Messages Sent");
             Console.ReadLine();
