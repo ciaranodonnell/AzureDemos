@@ -15,7 +15,7 @@ namespace ConsoleApp1
 
 			Console.WriteLine("Starting Azure Service Bus Demo");
 
-			var connectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=9JpjeQRtuHvQTAM0GRqA8UUnF+iiRr5rIpHFskL3RNE=";
+			var connectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=demoqueuepolicy;SharedAccessKey=M4Nm0T/Br/hHAP6OvrpFHJAbtpwy+VrTyEgm7deahAA=;EntityPath=demoqueue";
 
 			var queueName = "demoqueue";
 
@@ -30,24 +30,31 @@ namespace ConsoleApp1
 
 			var sender = client.CreateSender(queueName);
 
-			var sendResult = await sender.ScheduleMessageAsync(new ServiceBusMessage("Hello to the future"), DateTimeOffset.Now.AddSeconds(5));
+			var sequenceNumber = await sender.ScheduleMessageAsync(new ServiceBusMessage($"New Message from {DateTime.UtcNow.TimeOfDay}")
+				, DateTimeOffset.UtcNow.AddSeconds(30));
 
-			Console.WriteLine($"{DateTime.Now.TimeOfDay} - Sent the message");
+			Console.WriteLine("Message Scheduled - " + sequenceNumber.ToString());
+
+
+			Console.ReadLine();
+
+
+			var receiver = client.CreateReceiver(queueName);
+
+			var peekedMessage = await receiver.PeekMessageAsync();
+
+			Console.WriteLine($"{DateTime.Now.TimeOfDay} Peeked Message: '{peekedMessage.Body}'. Enqueued Time: {peekedMessage.EnqueuedTime}");
+
+			
+			await sender.CancelScheduledMessageAsync(sequenceNumber);
+			Console.WriteLine("Scheduled Message Cancellation Requested - " + sequenceNumber.ToString());
 
 
 			Console.ReadLine();
 
-			await sender.CancelScheduledMessageAsync(sendResult);
-
-			Console.ReadLine();
 
 		}
 
-		private static Task Processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
-		{
-			Console.WriteLine(arg.ToString());
-			return Task.CompletedTask;
-		}
 
 		private async static Task Processor_ProcessMessageAsync(ProcessMessageEventArgs arg)
 		{
@@ -55,5 +62,11 @@ namespace ConsoleApp1
 			Console.WriteLine($"{DateTime.Now.TimeOfDay} Received Processor Message: '{message.Body}'. Enqueued Time: {message.EnqueuedTime}");
 			await arg.CompleteMessageAsync(message);
 		}
+		private static Task Processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
+		{
+			Console.WriteLine(arg.ToString());
+			return Task.CompletedTask;
+		}
+
 	}
 }
