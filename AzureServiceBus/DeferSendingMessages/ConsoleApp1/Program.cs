@@ -15,43 +15,51 @@ namespace ConsoleApp1
 
 			Console.WriteLine("Starting Azure Service Bus Demo");
 
-			var connectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=demoqueuepolicy;SharedAccessKey=M4Nm0T/Br/hHAP6OvrpFHJAbtpwy+VrTyEgm7deahAA=;EntityPath=demoqueue";
+			string connectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=";
+			string queueName = "demoqueue";
+			string topicName = "demotopic";
+			string subscriptionName = "demotopicsub1";
 
-			var queueName = "demoqueue";
 
 			ServiceBusClient client = new ServiceBusClient(connectionString);
 
 
-			var processor = client.CreateProcessor(queueName);
+
+			var processor = client.CreateProcessor(topicName, subscriptionName);
 			processor.ProcessMessageAsync += Processor_ProcessMessageAsync;
 			processor.ProcessErrorAsync += Processor_ProcessErrorAsync;
 			await processor.StartProcessingAsync();
 
 
-			var sender = client.CreateSender(queueName);
+			var sender = client.CreateSender(topicName);
 
-			var sequenceNumber = await sender.ScheduleMessageAsync(new ServiceBusMessage($"New Message from {DateTime.UtcNow.TimeOfDay}")
-				, DateTimeOffset.UtcNow.AddSeconds(30));
+			ServiceBusMessage message = new ServiceBusMessage($"New Message Created at {DateTime.Now.TimeOfDay}");
 
-			Console.WriteLine("Message Scheduled - " + sequenceNumber.ToString());
+			long sequenceNumber = await sender.ScheduleMessageAsync(message, DateTimeOffset.Now.AddSeconds(75));
 
+			Console.WriteLine($"Scheduled a message with sequence number {sequenceNumber}");
 
 			Console.ReadLine();
 
+			await sender.CancelScheduledMessageAsync(sequenceNumber);
 
-			var receiver = client.CreateReceiver(queueName);
+			Console.WriteLine("Cancellation Requested");
 
+
+			var receiver = client.CreateReceiver(topicName, subscriptionName);
 			var peekedMessage = await receiver.PeekMessageAsync();
 
-			Console.WriteLine($"{DateTime.Now.TimeOfDay} Peeked Message: '{peekedMessage.Body}'. Enqueued Time: {peekedMessage.EnqueuedTime}");
-
-			
-			await sender.CancelScheduledMessageAsync(sequenceNumber);
-			Console.WriteLine("Scheduled Message Cancellation Requested - " + sequenceNumber.ToString());
+			if (peekedMessage != null)
+			{
+				Console.WriteLine($"{DateTime.Now.TimeOfDay} Peeked Message: '{message.Body}'. Enqueued Time: {peekedMessage.EnqueuedTime}");
+			}
+			else
+			{
+				Console.WriteLine("Peeked for a message but nothing was there");
+			}
 
 
 			Console.ReadLine();
-
 
 		}
 
@@ -64,7 +72,7 @@ namespace ConsoleApp1
 		}
 		private static Task Processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
 		{
-			Console.WriteLine(arg.ToString());
+			Console.WriteLine(arg.Exception.ToString());
 			return Task.CompletedTask;
 		}
 
