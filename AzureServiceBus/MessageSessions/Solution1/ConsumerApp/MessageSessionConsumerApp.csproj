@@ -7,12 +7,10 @@
 
   <ItemGroup>
     <Compile Remove="Program - Copy.cs" />
-    <Compile Remove="SessionQueueReceiver.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.1.2" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
   </ItemGroup>
 
 </Project>

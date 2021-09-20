@@ -10,9 +10,9 @@ namespace CompetingConsumersQueues
 {
 	class ConsumerAppProxy
 	{
-		public static IDisposable StartConsumerApp(string connectionString, string queueName, object id)
+		public static IDisposable StartConsumerApp(string connectionString, string queueName, string id, string sessionIds)
 		{
-			ProcessStartInfo psi = new ProcessStartInfo("ConsumerApp.exe", string.Join(' ', connectionString, queueName, id.ToString()))
+			ProcessStartInfo psi = new ProcessStartInfo("MessageSessionConsumerApp.exe", string.Join(' ', connectionString, queueName, id, sessionIds))
 			{
 				CreateNoWindow = false,
 				WindowStyle = ProcessWindowStyle.Normal,

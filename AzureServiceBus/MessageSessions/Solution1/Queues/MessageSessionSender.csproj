@@ -6,15 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="QueueReceiver.cs" />
+      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.1.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ConsumerApp\ConsumerApp.csproj" />
+      <ProjectReference Include="..\ConsumerApp\MessageSessionConsumerApp.csproj" />
     </ItemGroup>
 
 </Project>

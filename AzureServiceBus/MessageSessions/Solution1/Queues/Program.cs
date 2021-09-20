@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Azure.Messaging.ServiceBus;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.ServiceBus;
+
 
 namespace CompetingConsumersQueues
 {
@@ -13,67 +14,90 @@ namespace CompetingConsumersQueues
 		{
 			Console.WriteLine("Starting Azure Service Bus Demo");
 
-			var connectionString =
-				"Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=qQpXvuApzeF2n6tN3ZOoK5kIOgbCCn8N+PH2XVZ4Lwc=";
+			var connectionString = "";
 
-			var queueName = "demoQueue";
+			var queueName = "sessionedqueue";
 
+			ServiceBusClient client = new ServiceBusClient(connectionString);
+			var sender = client.CreateSender(queueName);
 
-			QueueClient sendingClient = new QueueClient(connectionString, queueName, ReceiveMode.PeekLock, RetryPolicy.Default);
 
 			var consumerId = 1;
 
 			List<IDisposable> d = new List<IDisposable>();
-			d.Add(ConsumerAppProxy.StartConsumerApp(connectionString, queueName, consumerId++));
+			//d.Add(ConsumerAppProxy.StartConsumerApp(connectionString, queueName, consumerId++));
+
+			const int numberOfCustomers = 10;
+			Random customerNumberPicker = new Random();
 
 
 			ThreadPool.QueueUserWorkItem(async (state) =>
 			{
 				int messsageNumber = 0;
 
-				Random r = new Random();
 
 				while (messsageNumber < 1000)
 				{
+					try
+					{
+						var customerId = customerNumberPicker.Next(numberOfCustomers);
+						var messageText = $"Message number {messsageNumber} is about Customer {customerId}";
 
-					var messageText = $"Message number {messsageNumber}";
+						var ourMessage = System.Text.Encoding.UTF8.GetBytes(messageText);
+						var msg = new ServiceBusMessage(ourMessage);
 
-					var ourMessage = System.Text.Encoding.UTF8.GetBytes(messageText);
-					var msg = new Message(ourMessage);
-					await sendingClient.SendAsync(msg);
-					await Task.Delay(r.Next(250));
-					messsageNumber++;
+						//Assign the message to a session for a customer
+						msg.SessionId = customerId.ToString();
 
+						await sender.SendMessageAsync(msg);
+						await Task.Delay(250);
+						messsageNumber++;
+					}
+					catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 				}
 			});
-						
+
 			while (true)
 			{
-				var messageText = Console.ReadLine();
-
-				if (messageText == "quit") break;
-
-				if (messageText == "up")
+				try
 				{
-					d.Add(ConsumerAppProxy.StartConsumerApp(connectionString, queueName, consumerId++));
-				}
-				if (messageText == "down")
-				{
-					var oneToKill = d[d.Count - 1];
-					d.RemoveAt(d.Count - 1);
-					oneToKill.Dispose();
-				}
+					var messageText = Console.ReadLine();
 
-				foreach (var bit in messageText.Split(' '))
-				{
-					var ourMessage = System.Text.Encoding.UTF8.GetBytes(bit);
-					var msg = new Message(ourMessage);
-					await sendingClient.SendAsync(msg);
+					if (messageText == "quit") break;
+
+					if (messageText.StartsWith("up"))
+					{
+						string sessionIds = "";
+						if (messageText.StartsWith("up "))
+						{
+							sessionIds = messageText.Substring(3);
+						}
+						d.Add(ConsumerAppProxy.StartConsumerApp(connectionString, queueName, (consumerId++).ToString(), sessionIds));
+					}
+					if (messageText == "down")
+					{
+						var oneToKill = d[d.Count - 1];
+						d.RemoveAt(d.Count - 1);
+						oneToKill.Dispose();
+					}
+
+					foreach (var bit in messageText.Split(' '))
+					{
+						var ourMessage = System.Text.Encoding.UTF8.GetBytes(bit);
+						var msg = new ServiceBusMessage(ourMessage);
+
+						msg.SessionId = "typed";
+
+						await sender.SendMessageAsync(msg);
+					}
 				}
+				catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 			}
 
-			
-
+			foreach (var oneToKill in d)
+			{
+				oneToKill.Dispose();
+			}
 		}
 	}
 }
