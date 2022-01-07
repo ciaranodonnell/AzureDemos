@@ -1,0 +1,19 @@
+{
+  "name": "usingtypescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/service-bus": "^7.4.0",
+    "util": "^0.12.4"
+  },
+  "devDependencies": {
+    "tslint": "^6.1.3"
+  }
+}
